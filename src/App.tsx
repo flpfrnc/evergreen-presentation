@@ -1,177 +1,32 @@
-import { ChangeEvent, useState } from "react";
+import { useState } from "react";
 import {
   Alert,
-  Avatar,
-  Badge,
-  BadgeOwnProps,
   Button,
-  Combobox,
-  Dialog,
   FilePicker,
   Label,
   Pane,
-  Pulsar,
-  RadioGroup,
+  Paragraph,
+  Position,
   SearchInput,
-  Spinner,
-  StatusIndicator,
+  SideSheet,
   Switch,
   Tab,
   Tablist,
   Text,
-  Textarea,
-  Tooltip,
   majorScale,
 } from "evergreen-ui";
 import CustomFileUploader from "./components/FileUploader";
+import UserCard from "./components/UserCard";
 
-interface FruitMapperProps {
-  [key: string]: string;
-}
-
-const FruitMapper: FruitMapperProps = {
-  Banana: "🍌",
-  Orange: "🍊",
-  Apple: "🍎",
-  Mango: "🥭",
-};
-
-function App() {
-  const [isShown, setIsShown] = useState(false);
-  const [exampleText, setExampleText] = useState<string>("");
+export default function App() {
+  const [sideSheetOpen, setSideSheetOpen] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [switchChecked, setSwitchChecked] = useState(true);
 
-  const [options] = useState([
-    { label: "Red", value: "red" },
-    { label: "Green", value: "green" },
-    { label: "Blue", value: "blue" },
-  ]);
-
-  const [colorValue, setColorValue] = useState("green");
-
   return (
     <>
-      <Pane className="rounded-xl shadow-md w-fit p-4 mx-4 my-4">
-        <Pane className="px-4 py-4">
-          <Text fontWeight="900" fontSize="70">
-            Basic Alert Components
-          </Text>
-        </Pane>
-        <Pane
-          display="flex"
-          alignItems="center"
-          gap="16px"
-          marginX={majorScale(2)}
-          className="py-8"
-        >
-          {["none", "success", "warning", "danger"].map((alertType, index) => {
-            return (
-              <Alert
-                key={`${alertType}_${index}`}
-                intent={alertType}
-                title="This is an Alert component"
-                marginBottom={32}
-              />
-            );
-          })}
-        </Pane>
-
-        <Pane className="px-4 py-8">
-          <Text fontWeight="900" fontSize="70">
-            Custom User Card Component
-          </Text>
-        </Pane>
-        <Pane className="rounded-xl shadow-md w-fit p-4 mx-4">
-          {/* 
-        The bellow pane properties are equivalent to the following
-        tailwind classes: "flex flex-col items-center gap-4" 
-        */}
-          <Pane
-            display="flex"
-            flexDirection="column"
-            alignItems="center"
-            gap="16px"
-          >
-            {/* Custom profile card using evergreen components */}
-            <Pane className="flex items-center gap-4">
-              <Pane position="relative" display="flex">
-                <StatusIndicator color="success" />
-                <Avatar
-                  name="Avatar Component"
-                  size={40}
-                  title="Avatar Component"
-                />
-                <Tooltip content="This a Pulsar component">
-                  <Pulsar />
-                </Tooltip>
-              </Pane>
-
-              <Badge
-                color={colorValue as BadgeOwnProps["color"]}
-                marginRight={8}
-                size="small"
-              >
-                Badge Component
-              </Badge>
-            </Pane>
-            <Text fontWeight="600">Text Component</Text>
-
-            <Text fontWeight="300">
-              {!isShown ? exampleText : <Spinner size={24} />}
-            </Text>
-
-            <Tooltip content="These are Button Components">
-              <Pane>
-                <Button marginRight={16} appearance="minimal">
-                  Minimal Button Appearance
-                </Button>
-                <Button
-                  marginRight={16}
-                  appearance="primary"
-                  onClick={() => setIsShown(true)}
-                >
-                  Edit Description
-                </Button>
-              </Pane>
-            </Tooltip>
-            <Dialog
-              isShown={isShown}
-              title="Edit card description."
-              onCloseComplete={() => setIsShown(false)}
-              confirmLabel="Confirmar"
-            >
-              <Pane>
-                <Tooltip content="Textarea Component">
-                  <Textarea
-                    id="textarea"
-                    placeholder="Type any information"
-                    value={exampleText || ""}
-                    onChange={(e: ChangeEvent<HTMLTextAreaElement>) =>
-                      setExampleText(e.currentTarget.value)
-                    }
-                  />
-                </Tooltip>
-                <Combobox
-                  openOnFocus
-                  items={["Banana", "Orange", "Apple", "Mango"]}
-                  title="Add an available emoji to the text"
-                  onChange={(selected: string) =>
-                    setExampleText(exampleText.concat(FruitMapper[selected]))
-                  }
-                  placeholder="Combobox Component"
-                />
-                <RadioGroup
-                  label="Badge Color"
-                  className="py-4"
-                  value={colorValue}
-                  options={options}
-                  onChange={(event) => setColorValue(event.target.value)}
-                />
-              </Pane>
-            </Dialog>
-          </Pane>
-        </Pane>
+      <Pane className="rounded-xl shadow-md w-fit p-4 mx-4 mt-4">
+        <Text fontWeight="900">Basic Evergreen UI Components Usage</Text>
       </Pane>
 
       <Pane height={120} className="py-16 px-4">
@@ -191,6 +46,30 @@ function App() {
             onSelect={() => setSelectedIndex(1)}
           >
             Form Components
+          </Tab>
+          <Tab
+            aria-controls={`panel-${2}`}
+            isSelected={selectedIndex === 2}
+            key={2}
+            onSelect={() => setSelectedIndex(2)}
+          >
+            Side Sheet
+          </Tab>
+          <Tab
+            aria-controls={`panel-${3}`}
+            isSelected={selectedIndex === 3}
+            key={3}
+            onSelect={() => setSelectedIndex(3)}
+          >
+            Custom User Card Component
+          </Tab>
+          <Tab
+            aria-controls={`panel-${4}`}
+            isSelected={selectedIndex === 4}
+            key={4}
+            onSelect={() => setSelectedIndex(4)}
+          >
+            Basic Alert Components
           </Tab>
         </Tablist>
         <Pane padding={16} background="tint1" flex="1">
@@ -238,10 +117,75 @@ function App() {
               </Pane>
             </form>
           </Pane>
+          <Pane
+            aria-labelledby={"2"}
+            aria-hidden={2 !== selectedIndex}
+            display={2 === selectedIndex ? "block" : "none"}
+            key={2}
+            role="tabpanel"
+          >
+            <SideSheet
+              position={Position.BOTTOM}
+              isShown={sideSheetOpen}
+              onCloseComplete={() => setSideSheetOpen(false)}
+            >
+              <Paragraph margin={40} fontWeight="900">
+                SideSheet Component
+              </Paragraph>
+            </SideSheet>
+            <Button onClick={() => setSideSheetOpen(true)}>
+              Show Side Sheet
+            </Button>
+          </Pane>
+          <Pane
+            aria-labelledby={"3"}
+            aria-hidden={3 !== selectedIndex}
+            display={3 === selectedIndex ? "block" : "none"}
+            key={3}
+            role="tabpanel"
+          >
+            <Pane className="px-4 py-8">
+              <Text fontWeight="900" fontSize="70">
+                Custom User Card Component
+              </Text>
+            </Pane>
+            <UserCard />
+          </Pane>
+          <Pane
+            aria-labelledby={"4"}
+            aria-hidden={4 !== selectedIndex}
+            display={4 === selectedIndex ? "block" : "none"}
+            key={4}
+            role="tabpanel"
+          >
+            <Pane className="px-4 py-4">
+              <Text fontWeight="900" fontSize="70">
+                Basic Alert Components
+              </Text>
+            </Pane>
+            <Pane
+              display="flex"
+              alignItems="center"
+              gap="16px"
+              marginX={majorScale(2)}
+              className="py-8"
+            >
+              {["none", "success", "warning", "danger"].map(
+                (alertType, index) => {
+                  return (
+                    <Alert
+                      key={`${alertType}_${index}`}
+                      intent={alertType}
+                      title="This is an Alert component"
+                      marginBottom={32}
+                    />
+                  );
+                }
+              )}
+            </Pane>
+          </Pane>
         </Pane>
       </Pane>
     </>
   );
 }
-
-export default App;
